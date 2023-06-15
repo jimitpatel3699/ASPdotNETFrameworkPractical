@@ -13,7 +13,7 @@ namespace Practical11Test01.Models
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Date of Birth is required")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Dob { get; set; }
         [Required(ErrorMessage = "Mobile number required")]
         [StringLength(10,MinimumLength =10)]
