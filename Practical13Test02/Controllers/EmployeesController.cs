@@ -88,17 +88,13 @@ namespace Practical13Test02.Controllers
             return RedirectToAction("Index");
         }
         public ActionResult Empcount()
-        {
-            var employeeCounts = _context.Employees
-                                .Join(_context.EmployeeDesignations,
-                                         emp => emp.EmployeeDesignationId,
-                                         empDes => empDes.Id,
-                                        (emp, empDes) => new { Employee = emp, Designation = empDes.Designation })
-                                        .GroupBy(x => x.Designation)
-                                        .Select(g => new { Designation = g.Key, Count = g.Count() }
-                                      );
-            ViewBag.Employees = employeeCounts;
-            return View();
+        {  
+            List<DesingationCount> employeeCounts = _context.Employees
+                                                    .Include(x => x.EmployeeDesignation)
+                                                    .GroupBy(x => x.EmployeeDesignation.Designation)
+                                                    .Select(g => new DesingationCount { DesignationName = g.Key, Count = g.Count() })
+                                                    .ToList();
+            return View(employeeCounts);
         }
         protected override void Dispose(bool disposing)
         {

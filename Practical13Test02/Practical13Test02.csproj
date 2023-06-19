@@ -142,6 +142,7 @@
       <DependentUpon>202306160751106_TableUpdated.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DesingationCount.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\EmployeeDesignation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

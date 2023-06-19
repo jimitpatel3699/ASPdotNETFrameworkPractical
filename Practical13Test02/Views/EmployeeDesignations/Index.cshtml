@@ -3,8 +3,8 @@
     <a href="@Url.Action("Create")"class= "btn btn-primary" >
         <i class="bi bi-file-earmark-plus"></i> Create New
     </a>
-<table class="table table-bordered text-dark">
-    <tr class="text-black">
+<table class="table table-dark table-striped table-bordered">
+    <tr>
         <th>
             @Html.DisplayNameFor(model => model.Designation)
         </th>
@@ -12,7 +12,7 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr class="text-black">
+    <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Designation)
         </td>
