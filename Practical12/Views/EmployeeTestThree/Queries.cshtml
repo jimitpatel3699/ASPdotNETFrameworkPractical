@@ -1,0 +1,50 @@
+﻿@model Practical12.Models.EmployeeTestThree
+@{
+    ViewData["Title"] = "Employees Queries";
+}
+
+<h4>Maximum salary holder employee</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("FirstName")
+            </th>
+            <th>
+                @Html.DisplayName("MiddleName")
+            </th>
+            <th>
+                @Html.DisplayName("LastName")
+            <th>
+                @Html.DisplayName("Salary")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            <tr>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(model => model.FirstName)
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(model => model.MiddleName)
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(model => model.LastName)
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(model => model.Salary)
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td style="vertical-align:middle" colspan="8">
+                    No Employees found
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
