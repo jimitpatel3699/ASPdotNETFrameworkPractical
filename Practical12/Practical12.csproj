@@ -120,13 +120,18 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\DesignationController.cs" />
+    <Compile Include="Controllers\EmployeeTestThreeController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\EmployeeTesttwoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Designation.cs" />
     <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\EmployeeTestThree.cs" />
     <Compile Include="Models\EmployeeTesttwo.cs" />
+    <Compile Include="Models\QueriesTest2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +186,16 @@
     <Content Include="Views\Employee\Create.cshtml" />
     <Content Include="Views\EmployeeTesttwo\Index.cshtml" />
     <Content Include="Views\EmployeeTesttwo\Create.cshtml" />
+    <Content Include="Views\Designation\Index.cshtml" />
+    <Content Include="Views\Designation\Create.cshtml" />
+    <Content Include="Views\Designation\Edit.cshtml" />
+    <Content Include="Views\Designation\Details.cshtml" />
+    <Content Include="Views\Designation\Delete.cshtml" />
+    <Content Include="Views\EmployeeTesttwo\Queries.cshtml" />
+    <Content Include="Views\EmployeeTestThree\Create.cshtml" />
+    <Content Include="Views\EmployeeTestThree\Index.cshtml" />
+    <Content Include="Views\EmployeeTestThree\Queries.cshtml" />
+    <Content Include="Views\Designation\Queries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

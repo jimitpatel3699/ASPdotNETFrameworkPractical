@@ -4,41 +4,47 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Practical12.Controllers
 {
-    public class EmployeeTesttwoController : Controller
+    public class EmployeeTestThreeController : Controller
     {
-        private string _connectionstring = ConfigurationManager.ConnectionStrings["ApplicationDbContext"].ConnectionString;
+        private string _connectionstring= ConfigurationManager.ConnectionStrings["ApplicationDbContext"].ConnectionString;
         public ActionResult Index()
         {
-            List<EmployeeTesttwo> employees = GetEmployees();
+            List<EmployeeTestThree> employees = GetEmployees(); 
             return View(employees);
         }
-        public ActionResult Create(int? id)
+        public ActionResult Create(int? id) 
         {
-            if (id == 0 || id == null)
+            var designations = GetDesignations();
+            if (id==0 || id==null)
             {
+                EmployeeTestThree employees = GetEmployees(id ?? 0);
+                employees.Designations = designations;
                 ViewBag.btnval = "Create";
+                return View(employees);
             }
             else
             {
                 ViewBag.btnval = "Update";
-                EmployeeTesttwo employees = GetEmployees(id ?? 0);
+                EmployeeTestThree employees = GetEmployees(id ??0);
+                employees.Designations = designations;
                 return View(employees);
             }
-            return View();
         }
         [HttpPost]
-        public ActionResult Create(EmployeeTesttwo employee)
+        public ActionResult Create(EmployeeTestThree employee)
         {
-            if (DateTime.Now.Year - employee.DOB.Year < 18)
+            if(DateTime.Now.Year-employee.DOB.Year<18)
             {
                 ModelState.AddModelError("invaliddate", "Invalid DOB");
             }
-            if (employee.Id != null || employee.Id != 0)
+            if(employee.Id!=null ||employee.Id!=0)
             {
                 ViewBag.btnval = "Update";
             }
@@ -46,10 +52,10 @@ namespace Practical12.Controllers
             {
                 ViewBag.btnval = "Create";
             }
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                int status = 0;
-                if (employee.Id != 0)
+                int status=0;
+                if(employee.Id!=0)
                 {
                     status = UpdateEmployee(employee);
                 }
@@ -66,155 +72,158 @@ namespace Practical12.Controllers
         }
         public ActionResult Delete(int id)
         {
-            if (id == 0 || id == null)
+            if(id==0 || id== null)
             {
                 HttpNotFound();
             }
-            int status = DeleteEmployee(id);
-            return RedirectToAction("Index");
+            int status= DeleteEmployee(id);
+            return RedirectToAction("Index");    
         }
         public ActionResult Queries()
         {
-            var employeesWithMiddleNameAsNull = new List<EmployeeTesttwo>();
-            var employeesWithDOBLessThan = new List<EmployeeTesttwo>();
-            var totalSalary = 0M;
-
+            EmployeeTestThree employee = null;
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
-                SqlCommand command = new SqlCommand("SELECT * FROM EmployeeTesttwo WHERE MiddleName IS NULL", con);
+
+                SqlCommand command = new SqlCommand("SELECT * FROM EmployeeTestThree ORDER BY Salary DESC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY", con);
                 con.Open();
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    employeesWithMiddleNameAsNull.Add(new EmployeeTesttwo()
+                    employee = new EmployeeTestThree()
                     {
                         Id = dataReader.GetInt32(dataReader.GetOrdinal("Id")),
                         FirstName = dataReader.GetString(dataReader.GetOrdinal("FirstName")),
                         MiddleName = dataReader.IsDBNull(dataReader.GetOrdinal("MiddleName")) ? string.Empty : dataReader.GetString(dataReader.GetOrdinal("MiddleName")),
-                        LastName = dataReader.GetString(dataReader.GetOrdinal("LastName")),                        
-                        Address = dataReader.IsDBNull(dataReader.GetOrdinal("Address")) ? string.Empty : dataReader.GetString(dataReader.GetOrdinal("Address")),
-                        Salary = dataReader.GetDecimal(dataReader.GetOrdinal("Salary"))
-                    });
-                }
-                con.Close();
-
-                SqlCommand command2 = new SqlCommand("SELECT * FROM EmployeeTesttwo WHERE DOB < '01-01-2000'", con);
-                con.Open();
-                SqlDataReader dataReader2 = command2.ExecuteReader();
-                while (dataReader2.Read())
-                {
-                    employeesWithDOBLessThan.Add(new EmployeeTesttwo()
-                    {
-                        Id = dataReader2.GetInt32(dataReader2.GetOrdinal("Id")),
-                        FirstName = dataReader2.GetString(dataReader2.GetOrdinal("FirstName")),
-                        MiddleName = dataReader2.IsDBNull(dataReader2.GetOrdinal("MiddleName")) ? string.Empty : dataReader2.GetString(dataReader2.GetOrdinal("MiddleName")),
-                        LastName = dataReader2.GetString(dataReader2.GetOrdinal("LastName")),
-                        Address = dataReader2.IsDBNull(dataReader2.GetOrdinal("Address")) ? string.Empty : dataReader2.GetString(dataReader2.GetOrdinal("Address")),
-                        Salary = dataReader2.GetDecimal(dataReader2.GetOrdinal("Salary"))
-                    });
-                }
-                con.Close();
-
-                SqlCommand command3 = new SqlCommand("SELECT SUM(Salary) FROM EmployeeTesttwo", con);
-                con.Open();
-                object result = command3.ExecuteScalar();
-                if (result != null)
-                {
-                    totalSalary = (decimal)result;
+                        LastName = dataReader.GetString(dataReader.GetOrdinal("LastName")),
+                        Salary = dataReader.GetDecimal(dataReader.GetOrdinal("Salary")),
+                       
+                    };
+                    break;
                 }
             }
-            return View(new QueriesTest2 { EmployeesWithDOBLessThan = employeesWithDOBLessThan , EmployeesWithMiddleNameAsNull = employeesWithDOBLessThan, TotalSalary = totalSalary});
+            return View(employee);
         }
-
-        [NonAction]
-        private List<EmployeeTesttwo> GetEmployees()
+            [NonAction]
+        private List<Designation> GetDesignations()
         {
-            List<EmployeeTesttwo> employees = new List<EmployeeTesttwo>();
+            List<Designation> Designations = new List<Designation>();
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
-                SqlCommand command = new SqlCommand("SELECT * FROM EmployeeTesttwo", con);
+                SqlCommand command = new SqlCommand("SELECT * FROM Designations", con);
                 con.Open();
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    employees.Add(new EmployeeTesttwo()
+                    Designations.Add(new Designation()
+                    {
+                        Id = dataReader.GetInt32(dataReader.GetOrdinal("Id")),
+                        DesignationName = dataReader.GetString(dataReader.GetOrdinal("DesignationName")),
+                    });
+                }
+            }
+            return Designations;
+        }
+
+        [NonAction]
+        private List<EmployeeTestThree> GetEmployees()
+        {
+            List<EmployeeTestThree> employees = new List<EmployeeTestThree>();
+            using (SqlConnection con = new SqlConnection(_connectionstring))
+            {
+                SqlCommand command = new SqlCommand("SELECT EmployeeTestThree.Id, FirstName, MiddleName, LastName, DOB, MobileNumber, Address, Salary, EmployeeTestThree.DesignationId, Designations.DesignationName FROM EmployeeTestThree INNER JOIN Designations ON EmployeeTestThree.DesignationId = Designations.Id", con);
+                
+                con.Open();
+                SqlDataReader dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    employees.Add(new EmployeeTestThree()
                     {
                         Id = dataReader.GetInt32(dataReader.GetOrdinal("Id")),
                         FirstName = dataReader.GetString(dataReader.GetOrdinal("FirstName")),
                         MiddleName = dataReader.IsDBNull(dataReader.GetOrdinal("MiddleName")) ? string.Empty : dataReader.GetString(dataReader.GetOrdinal("MiddleName")),
                         LastName = dataReader.GetString(dataReader.GetOrdinal("LastName")),
                         DOB = dataReader.GetDateTime(dataReader.GetOrdinal("DOB")),
-                        Mobile = dataReader.GetString(dataReader.GetOrdinal("Mobile")),
+                        Mobile = dataReader.GetString(dataReader.GetOrdinal("MobileNumber")),
+                        Salary = dataReader.GetDecimal(dataReader.GetOrdinal("Salary")),
                         Address = dataReader.IsDBNull(dataReader.GetOrdinal("Address")) ? string.Empty : dataReader.GetString(dataReader.GetOrdinal("Address")),
-                        Salary=dataReader.GetDecimal(dataReader.GetOrdinal("Salary"))
+                        Designation = dataReader.GetInt32(dataReader.GetOrdinal("DesignationId")),
+                        DesignationName= dataReader.GetString(dataReader.GetOrdinal("DesignationName"))
                     });
                 }
             }
             return employees;
         }
         [NonAction]
-        private EmployeeTesttwo GetEmployees(int id)
+        private EmployeeTestThree GetEmployees(int id)
         {
-            EmployeeTesttwo employees = new EmployeeTesttwo();
+            EmployeeTestThree employees =new EmployeeTestThree();
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
-
-                SqlCommand command = new SqlCommand("SELECT * FROM EmployeeTesttwo WHERE Id=@Id", con);
+                
+                SqlCommand command = new SqlCommand("SELECT * FROM EmployeeTestThree WHERE Id=@Id", con);
                 command.Parameters.AddWithValue("@Id", id);
                 con.Open();
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
                 {
-                    employees = new EmployeeTesttwo()
+                     employees = new EmployeeTestThree()
                     {
                         Id = dataReader.GetInt32(dataReader.GetOrdinal("Id")),
                         FirstName = dataReader.GetString(dataReader.GetOrdinal("FirstName")),
                         MiddleName = dataReader.IsDBNull(dataReader.GetOrdinal("MiddleName")) ? string.Empty : dataReader.GetString(dataReader.GetOrdinal("MiddleName")),
                         LastName = dataReader.GetString(dataReader.GetOrdinal("LastName")),
                         DOB = dataReader.GetDateTime(dataReader.GetOrdinal("DOB")),
-                        Mobile = dataReader.GetString(dataReader.GetOrdinal("Mobile")),
-                        Address = dataReader.IsDBNull(dataReader.GetOrdinal("Address")) ? string.Empty : dataReader.GetString(dataReader.GetOrdinal("Address")),
-                        Salary = dataReader.GetDecimal(dataReader.GetOrdinal("Salary"))
+                        Mobile = dataReader.GetString(dataReader.GetOrdinal("MobileNumber")),
+                         Salary = dataReader.GetDecimal(dataReader.GetOrdinal("Salary")),
+                         Designation = dataReader.GetInt32(dataReader.GetOrdinal("DesignationId")),
+                         Address = dataReader.IsDBNull(dataReader.GetOrdinal("Address")) ? string.Empty : dataReader.GetString(dataReader.GetOrdinal("Address")),
                     };
-
+                 
                 }
             }
             return employees;
         }
         [NonAction]
-        private int CreateEmployee(EmployeeTesttwo employee)
+        private int CreateEmployee(EmployeeTestThree employee)
         {
             int affectedRows = 0;
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
-                SqlCommand command = new SqlCommand("INSERT INTO EmployeeTesttwo(FirstName, MiddleName, LastName, DOB, Mobile, Address,Salary) VALUES(@FirstName, @MiddleName, @LastName, @DOB, @MobileNumber, @Address,@Salary)", con);
+                SqlCommand command = new SqlCommand("INSERT INTO EmployeeTestThree(FirstName, MiddleName, LastName, DOB, MobileNumber, Address, Salary, DesignationId) VALUES(@FirstName, @MiddleName, @LastName, @DOB, @MobileNumber, @Address, @Salary, @Designation)", con);
                 command.Parameters.AddWithValue("@FirstName", employee.FirstName);
                 command.Parameters.AddWithValue("@MiddleName", (object)employee.MiddleName ?? DBNull.Value);
                 command.Parameters.AddWithValue("@LastName", employee.LastName);
-                command.Parameters.AddWithValue("@DOB", employee.DOB);
+                command.Parameters.AddWithValue("@DOB", employee.DOB.Date);
                 command.Parameters.AddWithValue("@MobileNumber", employee.Mobile);
-                command.Parameters.AddWithValue("@Address", (object)employee.Address ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Salary", employee.Salary);
+
+                command.Parameters.AddWithValue("@Address", (object)employee.Address ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Designation", employee.Designation);
+
                 con.Open();
                 affectedRows = command.ExecuteNonQuery();
             }
             return affectedRows;
         }
         [NonAction]
-        private int UpdateEmployee(EmployeeTesttwo employee)
+        private int UpdateEmployee(EmployeeTestThree employee)
         {
             int affectedRows = 0;
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
-                SqlCommand command = new SqlCommand("UPDATE EmployeeTesttwo SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, DOB = @DOB, Mobile = @Mobile, Address = @Address,Salary=@Salary WHERE Id = @Id", con);
+                SqlCommand command = new SqlCommand("UPDATE EmployeeTestThree SET FirstName = @FirstName, MiddleName = @MiddleName, LastName = @LastName, DOB = @DOB, MobileNumber = @Mobile, Address = @Address, Salary = @Salary, DesignationId = @Designation WHERE Id = @Id", con);
                 command.Parameters.AddWithValue("@Id", employee.Id);
                 command.Parameters.AddWithValue("@FirstName", employee.FirstName);
                 command.Parameters.AddWithValue("@MiddleName", (object)employee.MiddleName ?? DBNull.Value);
                 command.Parameters.AddWithValue("@LastName", employee.LastName);
                 command.Parameters.AddWithValue("@DOB", employee.DOB);
                 command.Parameters.AddWithValue("@Mobile", employee.Mobile);
-                command.Parameters.AddWithValue("@Address", (object)employee.Address ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Salary", employee.Salary);
+
+                command.Parameters.AddWithValue("@Address", (object)employee.Address ?? DBNull.Value);
+                command.Parameters.AddWithValue("@Designation", employee.Designation);
+
                 con.Open();
                 affectedRows = command.ExecuteNonQuery();
             }
@@ -226,7 +235,7 @@ namespace Practical12.Controllers
             int affectedRows = 0;
             using (SqlConnection con = new SqlConnection(_connectionstring))
             {
-                SqlCommand command = new SqlCommand("DELETE FROM EmployeeTesttwo WHERE Id = @Id", con);
+                SqlCommand command = new SqlCommand("DELETE FROM EmployeeTestThree WHERE Id = @Id", con);
                 command.Parameters.AddWithValue("@Id", id);
                 con.Open();
                 affectedRows = command.ExecuteNonQuery();
