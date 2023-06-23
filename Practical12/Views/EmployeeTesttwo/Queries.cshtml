@@ -1,0 +1,134 @@
+﻿@model Practical12.Models.QueriesTest2
+@{
+    ViewData["Title"] = "Employees Queries";
+}
+
+<h4>Total Salary of All Employees</h4>
+<h3>@Model.TotalSalary</h3>
+<br />
+
+<h4>Employees with Middle Name as Null</h4>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("FirstName")
+            </th>
+            <th>
+                @Html.DisplayName("MiddleName")
+            </th>
+            <th>
+                @Html.DisplayName("LastName")
+            </th>
+            <th>
+                @Html.DisplayName("Salary")
+            </th>
+            <th>
+                @Html.DisplayName("Address")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.EmployeesWithMiddleNameAsNull != null && Model.EmployeesWithMiddleNameAsNull.Count() > 0)
+        {
+            foreach (var item in Model.EmployeesWithMiddleNameAsNull)
+            {
+                <tr>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.MiddleName)
+                    </td>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.Salary)
+                    </td>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", "Test2", new { id = item.Id }, new { @class = "btn btn-outline-dark" })
+                        @Html.ActionLink("Edit", "Edit", "Test2", new { id = item.Id }, new { @class = "btn btn-outline-warning" })
+                        @Html.ActionLink("Delete", "Delete", "Test2", new { id = item.Id }, new { @class = "btn btn-outline-danger" })
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td style="vertical-align:middle" colspan="8">
+                    No Employees found with Middle Name as Null
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Employees with DOB Less than 01-01-2000</h4>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("FirstName")
+            </th>
+            <th>
+                @Html.DisplayName("MiddleName")
+            </th>
+            <th>
+                @Html.DisplayName("LastName")
+            </th>
+            <th>
+                @Html.DisplayName("Salary")
+            </th>
+            <th>
+                @Html.DisplayName("Address")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.EmployeesWithDOBLessThan != null && Model.EmployeesWithDOBLessThan.Count() > 0)
+        {
+            foreach (var item in Model.EmployeesWithDOBLessThan)
+            {
+                <tr>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.MiddleName)
+                    </td>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.Salary)
+                    </td>
+                    <td style="vertical-align:middle">
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", "Test2", new { id = item.Id }, new { @class = "btn btn-outline-dark" })
+                        @Html.ActionLink("Edit", "Edit", "Test2", new { id = item.Id }, new { @class = "btn btn-outline-warning" })
+                        @Html.ActionLink("Delete", "Delete", "Test2", new { id = item.Id }, new { @class = "btn btn-outline-danger" })
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td style="vertical-align:middle" colspan="8">
+                    No Employees found with DOB less than 01-01-2000
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
