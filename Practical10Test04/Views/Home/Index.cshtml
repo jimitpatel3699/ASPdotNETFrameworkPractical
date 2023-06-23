@@ -1,0 +1,35 @@
+﻿@model Practical10Test04.Models.Calsi
+
+@{
+    if (ViewBag.result != null)
+    {
+        @Html.Raw(@ViewBag.result);
+    }
+}
+<div class="row">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Division</h2>
+            <hr />
+        </div>
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="row">
+                <div class="col-10">
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Number1)
+                        @Html.TextBoxFor(model => model.Number1)
+                        @Html.ValidationMessageFor(model => model.Number1)
+                    </div>
+                    <div class="mb-3">
+                        @Html.LabelFor(model => model.Number2)
+                        @Html.TextBoxFor(model => model.Number2)
+                        @Html.ValidationMessageFor(model => model.Number2)
+                    </div>
+                    <input type="submit" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
