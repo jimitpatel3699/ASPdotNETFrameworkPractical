@@ -1,0 +1,35 @@
+﻿@model Practical14.Employee
+<div>
+    <h4>Employee</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateofBirth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateofBirth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Age)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Age)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Create", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
