@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practical14", "Practical14\Practical14.csproj", "{CA85767C-AE85-4736-AD2F-43A698EDAD75}"
+=======
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practical13Test02", "Practical13Test02\Practical13Test02.csproj", "{507214C6-F43E-4C57-9651-3F89139EC255}"
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practical13Test01", "Practical13Test01\Practical13Test01.csproj", "{3A0BAD4A-DC74-46DA-A8E7-29EF7C8F11B7}"
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practical12", "Practical12\Practical12.csproj", "{FFEE649A-13F4-4998-88A5-D2B4598C09D3}"
@@ -16,6 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practical10Test01", "Practi
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practical09Test02", "Practical09Test02\Practical09Test02.csproj", "{A3C682C5-35D1-4F53-830C-A1DED5CF9016}"
 
 
+
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +27,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+
+		{CA85767C-AE85-4736-AD2F-43A698EDAD75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA85767C-AE85-4736-AD2F-43A698EDAD75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA85767C-AE85-4736-AD2F-43A698EDAD75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA85767C-AE85-4736-AD2F-43A698EDAD75}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
 
 		{507214C6-F43E-4C57-9651-3F89139EC255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{507214C6-F43E-4C57-9651-3F89139EC255}.Debug|Any CPU.Build.0 = Debug|Any CPU
